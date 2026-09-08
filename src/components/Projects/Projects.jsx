@@ -1,67 +1,92 @@
 import React from "react";
-import { projects, getColSpan } from "../../data/projects";
-import { RxVercelLogo } from "react-icons/rx";
-import { FaGithub } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { projects } from "../../data/projects";
+import { FaExternalLinkAlt, FaGithub, FaLock, FaServer } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 export const Projects = () => {
-  const projectsCopy = [...projects];
-  const projectClass = `h-auto flex flex-col text-center justify-center items-center w-[100%]`;
-  const projectsButton =
-    "min-w-20 flex items-center gap-2 border-[1px] p-1 px-2 rounded-full text-xs border-green-900 hover:bg-green-50 hover:text-black font-semibold active:scale-[90%] transition-all duration-300 easy-in-out";
+  const { t } = useTranslation();
+
+  const projectButton =
+    "min-w-24 inline-flex items-center justify-center gap-2 border p-2 px-3 rounded-full text-xs border-green-900 hover:bg-green-50 hover:text-black font-semibold active:scale-95 transition-all duration-300";
+
   return (
-    <main className="sm:w-[100%] w-[100%] min-h-screen p-4  flex justify-center items-center text-white/70">
-      <section className="h-[100%] grid grid-cols-1 sm:grid-cols-8 gap-y-8 gap-x-3 w-[100%] p-4">
-        {projectsCopy.map((project, index) => {
-          if(project.img !==''){
-            return(
-            <section
-            key={index}
-            className={`${projectClass} ${getColSpan(
-              index
-            )}  `}
-          >
-            <div className="h-auto flex flex-col p-2 justify-center m-auto">
-              {" "}
-              <NavLink to={project.vercel} target="_blank">
-                <img
-                  className="h-[20vh] sm:h-auto min-h-20 max-w-90 rounded-2xl border-2 border-green-900"
-                  src={project.img}
-                  alt={project.title}
-                />
-              </NavLink>
-            </div>
-            <div className=" flex flex-col justify-center items-center">
-              <h2 className="max-w-[90%] min-w-[50%]  sm:text-md text-sm">{project.title}</h2>
-              {/* <p className="max-w-[90%] min-w-[50%]">{project.description}</p> */}
-              <div className="flex gap-2 mt-3 flex-wrap justify-center">
-                <NavLink to={project.github} target="_blank">
-                  <button className={projectsButton}>
-                    <FaGithub />
-                    GitHub 
-                  </button>
-                </NavLink>
-                <NavLink to={project.vercel} target="_blank">
-                  <button className={projectsButton}>
-                    <RxVercelLogo /> Vercel
-                  </button>
-                </NavLink>
+    <main className="w-full min-h-screen p-4 flex justify-center text-white/70">
+      <section className="w-full max-w-6xl p-4">
+        <header className="mb-10 max-w-3xl">
+          <h1 className="text-2xl sm:text-4xl font-bold text-white/90">
+            {t("projectsPhase1.title")}
+          </h1>
+          <p className="mt-4 text-sm sm:text-lg leading-relaxed text-white/60">
+            {t("projectsPhase1.intro")}
+          </p>
+        </header>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {projects.map((project) => (
+            <article
+              key={project.id}
+              className="flex h-full flex-col justify-between rounded-2xl border border-green-900/80 bg-[#ffffff08] p-5 sm:p-6"
+            >
+              <div>
+                <div className="mb-5 flex items-center justify-between gap-4">
+                  <FaServer className="text-3xl text-[#00fcfc]/70" aria-hidden="true" />
+
+                  {project.private && (
+                    <span className="inline-flex items-center gap-2 rounded-full border border-[#b458eef8]/50 px-3 py-1 text-xs text-[#b458eef8]">
+                      <FaLock aria-hidden="true" />
+                      {t("projectsPhase1.private")}
+                    </span>
+                  )}
+                </div>
+
+                <h2 className="text-xl sm:text-2xl font-bold text-white/90">
+                  {t(project.titleKey)}
+                </h2>
+
+                <p className="mt-4 text-sm sm:text-base leading-relaxed text-white/60">
+                  {t(project.descriptionKey)}
+                </p>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {project.technologies.map((technology) => (
+                    <span
+                      key={technology}
+                      className="rounded-md border border-gray-100/30 px-2 py-1 text-xs"
+                    >
+                      #{technology}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <p className="my-2 flex flex-wrap items-center justify-center select-none">
-                {project.technologies.map((technologies, index) => (
-                  <span
-                    className="max-mx-8 m-1  text-xs border-[1px] p-1 border-gray-100/70 rounded-md"
-                    key={index}
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                {project.github && (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={projectButton}
                   >
-                    {" "}
-                    #{technologies.toUpperCase()}
-                  </span>
-                ))}
-              </p>
-            </div>
-          </section>)
-          }
-        })}
+                    <FaGithub aria-hidden="true" />
+                    {t("projectsPhase1.github")}
+                  </a>
+                )}
+
+                {project.live && (
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={projectButton}
+                  >
+                    <FaExternalLinkAlt aria-hidden="true" />
+                    {t("projectsPhase1.live")}
+                  </a>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
     </main>
   );
