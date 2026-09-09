@@ -3,12 +3,35 @@ import "../../styles/Home.css";
 import { FaFileDownload, FaGithub, FaLinkedin, FaMapMarkerAlt } from "react-icons/fa";
 import FotoPerfil from "../../assets/img/layout/PerfilLinkedin.png";
 import { Carrusel } from "../Carrusel/Carrusel";
-import CV from "../../data/CV/Carlos_Kaar_CV_ES-EN-IT.pdf";
+import CV_EN from "../../data/CV/Carlos_Alberto_Kaar_CV_EN.pdf";
+import CV_ES from "../../data/CV/Carlos_Alberto_Kaar_CV_ES.pdf";
+import CV_IT from "../../data/CV/Carlos_Alberto_Kaar_CV_IT.pdf";
 import { useTranslation } from "react-i18next";
 
+const cvByLanguage = {
+  en: {
+    file: CV_EN,
+    filename: "Carlos_Alberto_Kaar_CV_EN.pdf",
+  },
+  es: {
+    file: CV_ES,
+    filename: "Carlos_Alberto_Kaar_CV_ES.pdf",
+  },
+  it: {
+    file: CV_IT,
+    filename: "Carlos_Alberto_Kaar_CV_IT.pdf",
+  },
+};
+
 export const Home = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const socialButton = "socialIcon flex justify-center items-center gap-2";
+
+  const currentLanguage = (i18n.resolvedLanguage || i18n.language || "en")
+    .split("-")[0]
+    .toLowerCase();
+
+  const currentCV = cvByLanguage[currentLanguage] || cvByLanguage.en;
 
   return (
     <main className="w-full h-auto flex justify-center items-center m-auto mt-10 sm:mt-20">
@@ -70,10 +93,8 @@ export const Home = () => {
 
             <a
               className={socialButton}
-              href={CV}
-              download="Carlos_Kaar_CV_ES-EN-IT.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
+              href={currentCV.file}
+              download={currentCV.filename}
             >
               <FaFileDownload aria-hidden="true" />
               {t("home.cv")}
